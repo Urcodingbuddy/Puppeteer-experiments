@@ -1,11 +1,14 @@
+import express from "express";
 import puppeteer from 'puppeteer-extra';
-import StealthPlugin from "puppeteer-extra-plugin-stealth"
-import { Browser } from 'puppeteer';
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import chromium from '@sparticuz/chromium';
-// import chromium from '@sparticuz/chromium';
+
 puppeteer.use(StealthPlugin());
 
-const main = async () => {
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const takeScreenshot = async () => {
     try {
         const browser = await puppeteer.launch({
             headless: true,
@@ -17,28 +20,21 @@ const main = async () => {
         const BASE_URL = "https://bot.sannysoft.com/";
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
         await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
-        await page.screenshot({"path":"bot.jpeg"})
-        console.log("Screenshot")
-        await browser.close()
-    } catch (error) {
-        console.error('An error occurred with Amazon scraping:', error);
-        return [];
-    }
-}
-main()
 
-/*
-{
-    args: [...chromium.args, 
-        "--no-sandbox", 
-        "--disable-setuid-sandbox", 
-        "--disable-dev-shm-usage",
-        "--disable-accelerated-2d-canvas",
-        "--no-first-run",
-        "--no-zygote",
-        "--disable-gpu"],
-    executablePath: await chromium.executablePath(),
-    headless: chromium.headless,
-    defaultViewport: chromium.defaultViewport
-}
-*/
+        const screenshotPath = "bot.jpeg";
+        await page.screenshot({ path: screenshotPath });
+
+        console.log("Screenshot taken");
+        await browser.close();
+    } catch (error) {
+        console.error("An error occurred:", error);
+    }
+};
+
+// **API to Get the Screenshot**
+app.get("/screenshot", async (req, res) => {
+    await takeScreenshot();
+    res.sendFile(`${process.cwd()}/bot.jpeg`); // Send the screenshot file
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
