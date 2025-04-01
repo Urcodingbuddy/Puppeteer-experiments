@@ -1,13 +1,17 @@
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from "puppeteer-extra-plugin-stealth"
 import { Browser } from 'puppeteer';
+import chromium from '@sparticuz/chromium';
 // import chromium from '@sparticuz/chromium';
 puppeteer.use(StealthPlugin());
 
 const main = async () => {
     try {
-        const browser: Browser = await puppeteer.launch({
-            headless:true
+        const browser = await puppeteer.launch({
+            headless: true,
+            executablePath: await chromium.executablePath(),
+            args: chromium.args,
+            defaultViewport: chromium.defaultViewport,
         });
         const page = await browser.newPage();
         const BASE_URL = "https://bot.sannysoft.com/";
