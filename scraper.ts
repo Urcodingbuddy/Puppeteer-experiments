@@ -18,6 +18,7 @@ const main = async () => {
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
         await page.goto(BASE_URL, { waitUntil: "domcontentloaded" });
         await page.screenshot({"path":"bot.jpeg"})
+        console.log("Screenshot")
         await browser.close()
     } catch (error) {
         console.error('An error occurred with Amazon scraping:', error);
