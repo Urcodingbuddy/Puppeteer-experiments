@@ -38,6 +38,8 @@ app.use(express.static(path.resolve("."))); // Serve current directory
 
 app.get("/screenshot", async ( res: Response) => {
     await takeScreenshot();
+    console.log(res);
+    res.send("File ready at /bot.jpeg"); 
     res.sendFile(path.resolve("bot.jpeg"));
 });
 
