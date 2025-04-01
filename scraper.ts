@@ -34,13 +34,12 @@ const takeScreenshot = async () => {
 };
 
 // **API to Get the Screenshot**
-app.get("/screenshot", async (res: Response) => {
-    await takeScreenshot();
-    
-    const screenshotPath = path.resolve("bot.jpeg"); // Ensure absolute path
-    console.log(`Serving file: ${screenshotPath}`);
+app.use(express.static(path.resolve("."))); // Serve current directory
 
-    res.sendFile(screenshotPath);
+app.get("/screenshot", async ( res: Response) => {
+    await takeScreenshot();
+    res.sendFile(path.resolve("bot.jpeg"));
 });
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
