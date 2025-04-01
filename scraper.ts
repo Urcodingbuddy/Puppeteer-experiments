@@ -2,6 +2,7 @@ import express from "express";
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import chromium from '@sparticuz/chromium';
+import { Response } from "express";
 
 puppeteer.use(StealthPlugin());
 
@@ -32,7 +33,7 @@ const takeScreenshot = async () => {
 };
 
 // **API to Get the Screenshot**
-app.get("/screenshot", async (req, res) => {
+app.get("/screenshot", async (res: Response): Promise<void> => {
     await takeScreenshot();
     res.sendFile(`${process.cwd()}/bot.jpeg`); // Send the screenshot file
 });
